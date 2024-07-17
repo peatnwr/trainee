@@ -39,8 +39,8 @@ router.post('/login', async function(req, res, next) {
 
                     res.status(200).send(Response(200, "login_success",
                         {
-                            _id: user_data._id,
                             name: user_data.name,
+                            position: user_data.is_admin,
                             token: token
                         }
                     ));
@@ -89,6 +89,22 @@ router.put('/approve/:id', verify_token, async function(req, res, next) {
             }
         } else {
             return res.status(400).send(Response(400, "you don't have permission to approve."))
+        }
+    } catch (err) {
+        res.status(400).send(Response(400, err.message));
+    }
+});
+
+router.get('/users/unapprove', verify_token, async function(req, res, next) {
+    try {
+        let position = req.position;
+
+        if (position === "admin") {
+            let users_unapprove = await userSchema.find({ is_approve: false });
+
+            res.status(200).send(Response(200, "all unapprove users", users_unapprove));
+        } else {
+            return res.status(400).send(Response(400, "you don't have permission to see unapprove users"));
         }
     } catch (err) {
         res.status(400).send(Response(400, err.message));

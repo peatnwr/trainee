@@ -31,7 +31,7 @@ router.get('/:id', verify_token, async function(req, res, next) {
 
 router.post('/', verify_token, async function(req, res, next) {
     try {
-        let { name, price, detail, stock } = req.body;
+        let { name, price, detail, stock, img } = req.body;
         let position = req.position;
 
         if (position === "admin") {
@@ -39,8 +39,9 @@ router.post('/', verify_token, async function(req, res, next) {
             if (!price) { price = 50 }
             if (!detail) { detail = "" }
             if (!stock) { stock = 100 }
+            if (!img) { img = "" }
 
-            let add_product = await productSchema.create({ name: name, price: price, detail: detail, stock: stock });
+            let add_product = await productSchema.create({ name: name, price: price, detail: detail, stock: stock, img: img });
 
             res.status(200).send(Response(200, "successfully add product.", add_product));
         } else {
@@ -54,7 +55,7 @@ router.post('/', verify_token, async function(req, res, next) {
 router.put('/:id', verify_token, async function(req, res, next) {
     try {
         let { id } = req.params;
-        let { price, detail, stock } = req.body;
+        let { price, detail, stock, img } = req.body;
         let position = req.position;
 
         if (position === "admin") {
@@ -62,8 +63,9 @@ router.put('/:id', verify_token, async function(req, res, next) {
             if (!price) { price = 50 }
             if (!detail) { detail = "" }
             if (!stock) { stock = 100 }
+            if (!img) { img = "" }
 
-            let edit_product = await productSchema.findByIdAndUpdate(id, { price, detail, stock });
+            let edit_product = await productSchema.findByIdAndUpdate(id, { price, detail, stock, img });
 
             res.status(200).send(Response(200, "successfully edit product.", edit_product));
         } else {

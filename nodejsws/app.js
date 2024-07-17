@@ -12,8 +12,15 @@ const verify_token = require('./middleware/jwr_decode');
 var authenRoute = require('./routes/authen');
 var productRoute = require('./routes/products');
 var orderRoute = require('./routes/orders');
+var cors = require('cors');
 
 var app = express();
+
+const corsOptions = {
+  origin: 'http://localhost:8080',
+  credential: true,
+  optionSuccessStatus: 200,
+};
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,6 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors(corsOptions));
 
 app.use('/api/v1', authenRoute);
 app.use('/api/v1/products', verify_token, productRoute);
